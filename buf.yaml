@@ -1,0 +1,4 @@
+version: v2
+name: buf.build/alexander-bergeron/go-app-tmpl
+deps:
+  - buf.build/googleapis/googleapis

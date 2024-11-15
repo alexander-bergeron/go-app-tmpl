@@ -1,0 +1,15 @@
+FROM golang:1.23-alpine as build
+
+WORKDIR /build
+
+COPY . .
+
+RUN GOOS=linux GOARCH=arm64 go build -ldflags "-s -w" -o /hello-server ./cmd/server
+
+FROM alpine as release
+
+COPY --from=build /hello-server /hello-server
+
+EXPOSE 8080
+EXPOSE 9090
+ENTRYPOINT ["/hello-server"]

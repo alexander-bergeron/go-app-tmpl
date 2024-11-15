@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+option go_package = "github.com/alexander-bergeron/go-app-tmpl/gen/go/user/v1;userv1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/api/field_behavior.proto";
+
+package user.v1;
+
+// User Service
+service UserService {
+  // Get all users
+  rpc GetUsers (google.protobuf.Empty) returns (GetUsersResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/users"
+    };
+  }
+
+  // for example purpose - would not actually take this approach
+  // this is mostly just as an example of using a stream w/ grpc-gateway
+  rpc StreamUsers (google.protobuf.Empty) returns (stream User) {
+    option (google.api.http) = {
+      get: "/api/v1/userstream"
+    };
+  }
+
+  // Add listing
+  rpc CreateUser (CreateUserRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/users"
+      body: "*"
+    };
+  }
+}
+
+// Implements a user object.
+message User {
+  int32 user_id = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
+  string username = 2;
+  string email = 3;
+  string firstname = 4;
+  string lastname = 5;
+}
+
+// The response for get user.
+message GetUsersResponse {
+  repeated User users = 1;
+}
+
+// The response for create user.
+message CreateUserRequest {
+  User user = 1;
+}
+

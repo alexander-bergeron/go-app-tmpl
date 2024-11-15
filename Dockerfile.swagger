@@ -1,0 +1,14 @@
+FROM swaggerapi/swagger-ui:latest
+
+USER root
+
+# Install ca-certificates using apk
+RUN apk --no-cache add ca-certificates
+
+# Copy your CA certificate
+COPY certs/ca.crt /usr/local/share/ca-certificates/custom-ca.crt
+
+# Update CA certificates
+RUN update-ca-certificates
+
+USER nginx

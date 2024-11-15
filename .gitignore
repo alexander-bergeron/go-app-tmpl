@@ -23,3 +23,17 @@ go.work.sum
 
 # env file
 .env
+
+# Certs
+certs/
+
+# Generated files
+# remove for non-template repo
+gen/
+internal/repository
+
+# migrations - again only since this is a template repo
+migrations/
+
+# buf - again only since this is a template repo
+buf.lock
