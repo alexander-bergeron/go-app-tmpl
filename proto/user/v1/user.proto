@@ -39,8 +39,8 @@ message User {
   int32 user_id = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
   string username = 2;
   string email = 3;
-  string firstname = 4;
-  string lastname = 5;
+  string first_name = 4;
+  string last_name = 5;
 }
 
 // The response for get user.

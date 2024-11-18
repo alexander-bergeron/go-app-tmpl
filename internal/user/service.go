@@ -35,8 +35,8 @@ func (s Service) GetUsers(ctx context.Context, _ *emptypb.Empty) (*userpb.GetUse
 			UserId:    u.UserID,
 			Username:  u.Username,
 			Email:     u.Email,
-			Firstname: u.FirstName.String,
-			Lastname:  u.LastName.String,
+			FirstName: u.FirstName.String,
+			LastName:  u.LastName.String,
 		}
 		pusers = append(pusers, pu)
 	}
@@ -48,8 +48,8 @@ func (s Service) CreateUser(ctx context.Context, in *userpb.CreateUserRequest) (
 	newUser := repository.CreateUserParams{
 		Username:  in.User.Username,
 		Email:     in.User.Email,
-		FirstName: sql.NullString{String: in.User.Firstname, Valid: true}, // TODO: check if not null
-		LastName:  sql.NullString{String: in.User.Lastname, Valid: true},  // TODO: check if not null
+		FirstName: sql.NullString{String: in.User.FirstName, Valid: true}, // TODO: check if not null
+		LastName:  sql.NullString{String: in.User.LastName, Valid: true},  // TODO: check if not null
 	}
 
 	err := s.q.CreateUser(ctx, newUser)
@@ -77,8 +77,8 @@ func (s Service) StreamUsers(_ *emptypb.Empty, stream userpb.UserService_StreamU
 			UserId:    u.UserID,
 			Username:  u.Username,
 			Email:     u.Email,
-			Firstname: u.FirstName.String,
-			Lastname:  u.LastName.String,
+			FirstName: u.FirstName.String,
+			LastName:  u.LastName.String,
 		}
 
 		err := stream.Send(pu)

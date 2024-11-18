@@ -57,7 +57,7 @@ test-get-grpc:
 .PHONY: test-post-grpc
 test-post-grpc:
 	grpcurl -cacert certs/ca.crt \
-	-d '{"user": {"username":"new user", "email": "new email", "firstname": "new", "lastname": "user"}}' \
+	-d '{"user": {"username":"new user", "email": "new email", "first_name": "new", "last_name": "user"}}' \
 	localhost:9090 user.v1.UserService/CreateUser
 
 .PHONY: test-get-rest
@@ -76,5 +76,5 @@ test-stream-rest:
 test-post-rest:
 	curl -X POST -H "Content-Type: application/json" \
 	  --cacert certs/ca.crt \
-          -d '{"Username":"new user", "Email": "new email", "FirstName": "new", "LastName": "user"}' \
+	  -d '{"user": {"username":"new user", "email": "new email", "first_name": "new", "last_name": "user"}}' \
           https://localhost:8080/api/v1/users
