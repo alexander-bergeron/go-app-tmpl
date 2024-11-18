@@ -68,6 +68,28 @@ migrate create -ext sql -dir migrations -seq init
 
 This creates your migrations directory and creates two empty files, init.up and init.down.
 
+```sql
+-- init.up
+-- Create the users table
+CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(50) NOT NULL UNIQUE,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100)
+);
+
+INSERT INTO users (username, email, first_name, last_name) VALUES
+('Cow31337Killer', 'ckilla@hotmail.com', 'Cow', 'Killer'),
+('Durial321', 'backslash@yahoo.com', 'Durial', '321'),
+('BigRedJapan', 'brj@gmail.com', 'BigRed', 'Japan');
+```
+
+```sql
+-- init.down
+DROP TABLE IF EXISTS users;
+```
+
 6. Initialize `sqlc.yaml`.
 
 _see file contents for further explanation_

@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"log/slog"
 
@@ -41,6 +42,23 @@ func (s Service) GetUsers(ctx context.Context, _ *emptypb.Empty) (*userpb.GetUse
 	}
 
 	return &userpb.GetUsersResponse{Users: pusers}, nil
+}
+
+func (s Service) CreateUser(ctx context.Context, in *userpb.CreateUserRequest) (*emptypb.Empty, error) {
+	newUser := repository.CreateUserParams{
+		Username:  in.User.Username,
+		Email:     in.User.Email,
+		FirstName: sql.NullString{String: in.User.Firstname, Valid: true}, // TODO: check if not null
+		LastName:  sql.NullString{String: in.User.Lastname, Valid: true},  // TODO: check if not null
+	}
+
+	err := s.q.CreateUser(ctx, newUser)
+	if err != nil {
+		slog.Error("error creating new user", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to create new user: %w", err)
+	}
+
+	return &emptypb.Empty{}, nil
 }
 
 func (s Service) StreamUsers(_ *emptypb.Empty, stream userpb.UserService_StreamUsersServer) error {

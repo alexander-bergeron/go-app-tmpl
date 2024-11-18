@@ -57,7 +57,7 @@ test-get-grpc:
 .PHONY: test-post-grpc
 test-post-grpc:
 	grpcurl -cacert certs/ca.crt \
-	-d '{"user": {"Username":"new user", "Email": "new email", "FirstName": "new", "LastName": "user"}}' \
+	-d '{"user": {"username":"new user", "email": "new email", "firstname": "new", "lastname": "user"}}' \
 	localhost:9090 user.v1.UserService/CreateUser
 
 .PHONY: test-get-rest
