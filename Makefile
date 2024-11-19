@@ -1,9 +1,24 @@
 
-# builds the proto files
 .PHONY: build
-build:
+build: build-buf build-migrate build-sqlc
+
+# builds the proto files
+.PHONY: build-buf
+build-buf:
 	buf dep update
 	buf generate -v
+
+.PHONY: build-sqlc
+build-sqlc:
+	sqlc generate
+
+.PHONY: build-sqlc-pgx
+build-sqlc-pgx:
+	sqlc generate -f sqlc.pgx.yaml
+
+.PHONY: build-migrate
+build-migrate:
+	migrate create -ext sql -dir migrations -seq init
 
 # stop the docker-compose
 .PHONY: down
@@ -28,7 +43,7 @@ gen-certs: gen-ca-certs gen-server-certs gen-client-certs
 # The CA acts as a trusted third party that confirms the identities of all parties involved.
 .PHONY: gen-ca-certs
 gen-ca-certs:
-	# mkdir -p certs
+	mkdir -p certs
 	openssl genrsa -out certs/ca.key 4096
 	openssl req -x509 -new -nodes -key certs/ca.key -sha256 -days 1024 -out certs/ca.crt -subj "/CN=gRPC CA"
 

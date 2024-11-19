@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
 	"log"
@@ -16,7 +15,7 @@ import (
 	users "github.com/alexander-bergeron/go-app-tmpl/internal/user"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-
+	"github.com/jackc/pgx/v5/pgxpool"
 	_ "github.com/lib/pq"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
@@ -59,15 +58,32 @@ func run(ctx context.Context) error {
 	// specify grpc server port
 	const addr = ":9090"
 
+	// stdlib
 	// set conn string
-	connStr := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
-		os.Getenv("DB_HOST"), os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"))
+	// connStr := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
+	// 	os.Getenv("DB_HOST"), os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"))
+	//
+	// db, err := sql.Open("postgres", connStr)
+	// if err != nil {
+	// 	slog.Error("failed to connect to database", slog.String("error", err.Error()))
+	// }
+	// defer db.Close()
 
-	db, err := sql.Open("postgres", connStr)
+	// pgx
+	connStr := fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s sslmode=disable",
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_NAME"),
+	)
+
+	dbpool, err := pgxpool.New(ctx, connStr)
 	if err != nil {
 		slog.Error("failed to connect to database", slog.String("error", err.Error()))
+		return err
 	}
-	defer db.Close()
+	defer dbpool.Close()
 
 	// add tls
 	tlsCredentials, err := credentials.NewServerTLSFromFile("/certs/server.crt", "/certs/server.key")
@@ -78,7 +94,7 @@ func run(ctx context.Context) error {
 
 	// initialize server
 	s := grpc.NewServer(serverOpts...)
-	userpb.RegisterUserServiceServer(s, users.NewUserService(db))
+	userpb.RegisterUserServiceServer(s, users.NewUserService(dbpool))
 
 	// Enable reflection
 	reflection.Register(s)

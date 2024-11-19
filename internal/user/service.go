@@ -2,12 +2,12 @@ package user
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"log/slog"
 
 	userpb "github.com/alexander-bergeron/go-app-tmpl/gen/go/proto/user/v1"
 	"github.com/alexander-bergeron/go-app-tmpl/internal/repository"
+	"github.com/jackc/pgx/v5/pgtype"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -48,8 +48,10 @@ func (s Service) CreateUser(ctx context.Context, in *userpb.CreateUserRequest) (
 	newUser := repository.CreateUserParams{
 		Username:  in.User.Username,
 		Email:     in.User.Email,
-		FirstName: sql.NullString{String: in.User.FirstName, Valid: true}, // TODO: check if not null
-		LastName:  sql.NullString{String: in.User.LastName, Valid: true},  // TODO: check if not null
+		FirstName: pgtype.Text{String: in.User.FirstName, Valid: true},
+		LastName:  pgtype.Text{String: in.User.LastName, Valid: true},
+		// FirstName: sql.NullString{String: in.User.FirstName, Valid: true}, // TODO: check if not null
+		// LastName:  sql.NullString{String: in.User.LastName, Valid: true},  // TODO: check if not null
 	}
 
 	err := s.q.CreateUser(ctx, newUser)
