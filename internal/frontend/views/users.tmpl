@@ -1,0 +1,22 @@
+<table>
+    <thead>
+        <tr>
+            <th>User ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>FirstName</th>
+            <th>LastName</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{range .}}
+        <tr>
+            <td>{{.UserId}}</td>
+            <td>{{.Username}}</td>
+            <td>{{.Email}}</td>
+            <td>{{.FirstName}}</td>
+            <td>{{.LastName}}</td>
+        </tr>
+        {{end}}
+    </tbody>
+</table>
