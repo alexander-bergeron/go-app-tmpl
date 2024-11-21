@@ -1,6 +1,6 @@
 
 .PHONY: build
-build: build-buf build-migrate build-sqlc
+build: build-buf build-migrate build-sqlc-pgx
 
 # builds the proto files
 .PHONY: build-buf
