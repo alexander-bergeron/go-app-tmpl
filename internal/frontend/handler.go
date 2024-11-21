@@ -5,11 +5,11 @@ import (
 	"embed"
 	"html/template"
 	"log"
+	"log/slog"
 	"net/http"
 
 	userpb "github.com/alexander-bergeron/go-app-tmpl/gen/go/proto/user/v1"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -65,27 +65,13 @@ func (h *PageHandler) handleUsers(w http.ResponseWriter, r *http.Request) {
 
 	res, err := client.GetUsers(ctx, &emptypb.Empty{})
 	if err != nil {
-		status, ok := status.FromError(err)
-		if ok {
-			log.Fatalf("status code: %s, error: %s", status.Code().String(), status.Message())
-		}
-		log.Fatal(err)
+		slog.Error("failed to query users", slog.String("error", err.Error()))
+		// status, ok := status.FromError(err)
+		// if ok {
+		// 	log.Fatalf("status code: %s, error: %s", status.Code().String(), status.Message())
+		// }
+		// log.Fatal(err)
 	}
-
-	// var users []Listing
-	// for _, listing := range res.Listings {
-	// 	log.Printf("response received: %s", listing)
-	//
-	// 	listings = append(listings, Listing{
-	// 		ExchangeID:   int(listing.GetExchangeId()),
-	// 		ItemID:       int(listing.GetItemId()),
-	// 		ListQuantity: int(listing.GetListQuantity()),
-	// 		ListPrice:    float64(listing.GetListPrice()),
-	// 		ListTime:     listing.GetListTime(),
-	// 		IsActive:     listing.GetIsActive(),
-	// 		UserID:       int(listing.GetUserId()),
-	// 	})
-	// }
 
 	err = h.templates.ExecuteTemplate(w, "users.tmpl", res.Users)
 	if err != nil {
@@ -110,11 +96,12 @@ func (h *PageHandler) handleCreateUser(w http.ResponseWriter, r *http.Request) {
 
 	_, err := client.CreateUser(ctx, &pbReq)
 	if err != nil {
-		status, ok := status.FromError(err)
-		if ok {
-			log.Fatalf("status code: %s, error: %s", status.Code().String(), status.Message())
-		}
-		log.Fatal(err)
+		slog.Error("failed to create new user", slog.String("error", err.Error()))
+		// status, ok := status.FromError(err)
+		// if ok {
+		// 	log.Fatalf("status code: %s, error: %s", status.Code().String(), status.Message())
+		// }
+		// log.Fatal(err)
 	}
 
 	w.Header().Set("HX-Refresh", "true")

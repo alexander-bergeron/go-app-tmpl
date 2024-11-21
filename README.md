@@ -136,3 +136,7 @@ Serving over TLS takes various steps.
 1. Determine how to set host automatically for swagger page rather than manual change after generation.
 
 2. Setup CORS so its not hard coded.
+
+3. setup static css and js
+
+4. test to see if air works in container

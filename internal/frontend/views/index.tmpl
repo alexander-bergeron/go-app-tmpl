@@ -42,7 +42,7 @@
     <!-- New User Form -->
     <div class="form-container">
         <h2>Create New User</h2>
-        <form hx-post="/create-user" hx-on="afterRequest:this.reset()">
+        <form hx-post="/create-user" hx-on--after-request="this.reset()">
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" 
