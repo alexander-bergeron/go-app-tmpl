@@ -8,6 +8,10 @@ build-buf:
 	buf dep update
 	buf generate -v
 
+.PHONY: build-migrate
+build-migrate:
+	migrate create -ext sql -dir migrations -seq init
+
 .PHONY: build-sqlc
 build-sqlc:
 	sqlc generate
@@ -15,10 +19,6 @@ build-sqlc:
 .PHONY: build-sqlc-pgx
 build-sqlc-pgx:
 	sqlc generate -f sqlc.pgx.yaml
-
-.PHONY: build-migrate
-build-migrate:
-	migrate create -ext sql -dir migrations -seq init
 
 # stop the docker-compose
 .PHONY: down
@@ -67,13 +67,14 @@ gen-client-certs:
 # If testing with server running over mtls replace -plaintext with -cacert certs/ca.crt -cert certs/client.crt -key certs/client.key
 .PHONY: test-get-grpc
 test-get-grpc:
-	grpcurl -cacert certs/ca.crt localhost:9090 user.v1.UserService/GetUsers
+	grpcurl -cacert certs/ca.crt \
+	  localhost:9090 user.v1.UserService/GetUsers
 
 .PHONY: test-post-grpc
 test-post-grpc:
 	grpcurl -cacert certs/ca.crt \
-	-d '{"user": {"username":"new user", "email": "new email", "first_name": "new", "last_name": "user"}}' \
-	localhost:9090 user.v1.UserService/CreateUser
+	  -d '{"user": {"username":"new user", "email": "new email", "first_name": "new", "last_name": "user"}}' \
+	  localhost:9090 user.v1.UserService/CreateUser
 
 .PHONY: test-get-rest
 test-get-rest:
@@ -93,3 +94,4 @@ test-post-rest:
 	  --cacert certs/ca.crt \
 	  -d '{"user": {"username":"new user", "email": "new email", "first_name": "new", "last_name": "user"}}' \
           https://localhost:8080/api/v1/users
+

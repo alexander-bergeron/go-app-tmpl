@@ -9,7 +9,7 @@ This section will cover all the moving parts of this demo. Each closes one gap f
 
 ### [sqlc]("https://sqlc.dev/")
 
-sqlc is used to build out your database connection and query layers using just regular sql queries. 
+`sqlc` is used to build out your database connection and query layers using just regular sql queries. 
 
 ### [buf]("https://github.com/bufbuild/buf")
 
@@ -41,7 +41,7 @@ golang-migrate `migrate` tool is used for database migrations. Its somewhat over
 export DB_HOST=localhost
 export DB_PASSWORD=your_password
 export DB_USER=your_username
-export DB_NAME=sqlc_demo
+export DB_NAME=golang_app
 ```
 
 **Note: the following are not needed if cloning this repo but ill cover for completeness.**
