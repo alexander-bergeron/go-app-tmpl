@@ -139,4 +139,4 @@ Serving over TLS takes various steps.
 
 3. setup static css and js
 
-4. test to see if air works in container
+4. test to see if air works in container - [reference](https://afarid.medium.com/golang-hot-reloading-using-docker-and-air-b6da91293cd9)
