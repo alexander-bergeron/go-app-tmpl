@@ -1,8 +1,6 @@
 # go-app-tmpl
 A template for generic golang applications.
 
-Demo repo that shows how to use a combination of declarative tools to build a extensible golang API with a postgresql backend. At this point the only application code that has to be build by a developer is the handler code and the main server code.
-
 ## Tooling
 
 This section will cover all the moving parts of this demo. Each closes one gap for the fully declarative extensible build.
@@ -90,7 +88,7 @@ INSERT INTO users (username, email, first_name, last_name) VALUES
 DROP TABLE IF EXISTS users;
 ```
 
-6. Initialize `sqlc.yaml`.
+6. Initialize `sqlc.pgx.yaml`.
 
 _see file contents for further explanation_
 
@@ -102,24 +100,49 @@ _see file contents for further explanation_
 
 1. `make build`
 
-manually update swagger.json
+- This will generate the grpc protobuf code, the migrate directory with init files, and the sqlc.pgx.yaml code.
+
+- After build completes, manually update swagger.json with host and schemes.
 
 ```json
-  "host": "localhost:8080",
-  "schemes": ["https"],
+  "info": {
+    "title": "proto/user/v1/user.proto",
+    "version": "version not set"
+  },
+  "host": "localhost:8080", # add this line
+  "schemes": ["https"], # add this line
+  "tags": [
+    {
+      "name": "UserService"
+    }
+  ],
 ```
 
-2. `sqlc generate`
+2. `go mod tidy`
 
-3. `go mod tidy`
+- Updates all your deps.
 
-4. `make up`
+3. `make gen-certs`
+
+- Creates cert files for tls.
+
+4. start docker daemon.
+
+5. `make up`
+
+- Runs docker compose.
 
 ## Testing
 
 1. `make test-get-grpc` - test grpc client call
 
 2. `make test-get-rest` - test grpc-gateway
+
+3. `make test-post-grpc` - posts a new test user to the API
+
+4. Navigate to `localhost:3000` for a webserver displaying all users with form input for a new user - built with htmx
+
+5. Navigate to `localhost:8081` for a swagger page - **Note: you will need to add the generated `ca.crt` to your browser for swagger to work.**
 
 ## TLS
 
