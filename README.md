@@ -42,7 +42,7 @@ export DB_USER=your_username
 export DB_NAME=golang_app
 ```
 
-**Note: the following are not needed if cloning this repo but ill cover for completeness.**
+**Note: the following are not needed if cloning this repo but ill cover for completeness. If you've cloned continue at build section.**
 
 3. Initialize the go module.
 
