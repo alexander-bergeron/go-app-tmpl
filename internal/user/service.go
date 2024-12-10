@@ -37,6 +37,7 @@ func (s Service) GetUsers(ctx context.Context, _ *emptypb.Empty) (*userpb.GetUse
 			Email:     u.Email,
 			FirstName: u.FirstName.String,
 			LastName:  u.LastName.String,
+			Version:   u.Version,
 		}
 		pusers = append(pusers, pu)
 	}
@@ -44,7 +45,7 @@ func (s Service) GetUsers(ctx context.Context, _ *emptypb.Empty) (*userpb.GetUse
 	return &userpb.GetUsersResponse{Users: pusers}, nil
 }
 
-func (s Service) CreateUser(ctx context.Context, in *userpb.CreateUserRequest) (*emptypb.Empty, error) {
+func (s Service) CreateUser(ctx context.Context, in *userpb.CreateUserRequest) (*userpb.User, error) {
 	newUser := repository.CreateUserParams{
 		Username:  in.User.Username,
 		Email:     in.User.Email,
@@ -54,13 +55,20 @@ func (s Service) CreateUser(ctx context.Context, in *userpb.CreateUserRequest) (
 		// LastName:  sql.NullString{String: in.User.LastName, Valid: true},  // TODO: check if not null
 	}
 
-	err := s.q.CreateUser(ctx, newUser)
+	user, err := s.q.CreateUser(ctx, newUser)
 	if err != nil {
 		slog.Error("error creating new user", slog.String("error", err.Error()))
 		return nil, fmt.Errorf("failed to create new user: %w", err)
 	}
 
-	return &emptypb.Empty{}, nil
+	return &userpb.User{
+		UserId:    user.UserID,
+		Username:  user.Username,
+		Email:     user.Email,
+		FirstName: user.FirstName.String,
+		LastName:  user.LastName.String,
+		Version:   user.Version,
+	}, nil
 }
 
 func (s Service) StreamUsers(_ *emptypb.Empty, stream userpb.UserService_StreamUsersServer) error {
@@ -89,4 +97,48 @@ func (s Service) StreamUsers(_ *emptypb.Empty, stream userpb.UserService_StreamU
 		}
 	}
 	return nil
+}
+
+func (s Service) UpdateUser(ctx context.Context, in *userpb.UpdateUserRequest) (*userpb.User, error) {
+	newUser := repository.UpdateUserParams{
+		UserID:    in.UserId,
+		Username:  in.Username,
+		Email:     in.Email,
+		FirstName: pgtype.Text{String: in.FirstName, Valid: true},
+		LastName:  pgtype.Text{String: in.LastName, Valid: true},
+		// FirstName: sql.NullString{String: in.User.FirstName, Valid: true}, // TODO: check if not null
+		// LastName:  sql.NullString{String: in.User.LastName, Valid: true},  // TODO: check if not null
+	}
+
+	user, err := s.q.UpdateUser(ctx, newUser)
+	if err != nil {
+		slog.Error("error updating user", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to update user: %w", err)
+	}
+
+	return &userpb.User{
+		UserId:    user.UserID,
+		Username:  user.Username,
+		Email:     user.Email,
+		FirstName: user.FirstName.String,
+		LastName:  user.LastName.String,
+		Version:   user.Version,
+	}, nil
+}
+
+func (s Service) DeleteUser(ctx context.Context, in *userpb.DeleteUserRequest) (*userpb.User, error) {
+	user, err := s.q.DeleteUser(ctx, in.UserId)
+	if err != nil {
+		slog.Error("error deleting user", slog.String("error", err.Error()))
+		return nil, fmt.Errorf("failed to delete user: %w", err)
+	}
+
+	return &userpb.User{
+		UserId:    user.UserID,
+		Username:  user.Username,
+		Email:     user.Email,
+		FirstName: user.FirstName.String,
+		LastName:  user.LastName.String,
+		Version:   user.Version,
+	}, nil
 }
