@@ -32,8 +32,5 @@ certs/
 gen/
 internal/repository
 
-# migrations - again only since this is a template repo
-migrations/
-
 # buf - again only since this is a template repo
 buf.lock
