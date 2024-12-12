@@ -25,13 +25,29 @@ service UserService {
     };
   }
 
-  // Add listing
-  rpc CreateUser (CreateUserRequest) returns (google.protobuf.Empty) {
+  // Add a new user
+  rpc CreateUser (CreateUserRequest) returns (User) {
     option (google.api.http) = {
       post: "/api/v1/users"
       body: "*"
     };
   }
+
+  // Delete user
+  rpc DeleteUser (DeleteUserRequest) returns (User) {
+    option (google.api.http) = {
+      delete: "/api/v1/users/{user_id}"
+    };
+  }
+
+  // Update user
+  rpc UpdateUser (UpdateUserRequest) returns (User) {
+    option (google.api.http) = {
+      put: "/api/v1/users"
+      body: "*"
+    };
+  }
+ 
 }
 
 // Implements a user object.
@@ -41,6 +57,7 @@ message User {
   string email = 3;
   string first_name = 4;
   string last_name = 5;
+  int32 version = 6;
 }
 
 // The response for get user.
@@ -51,5 +68,19 @@ message GetUsersResponse {
 // The response for create user.
 message CreateUserRequest {
   User user = 1;
+}
+
+// delete user
+message DeleteUserRequest {
+  int32 user_id = 1;
+}
+
+// update user req
+message UpdateUserRequest {
+  int32 user_id = 1;
+  string username = 2;
+  string email = 3;
+  string first_name = 4;
+  string last_name = 5;
 }
 

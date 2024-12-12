@@ -76,6 +76,18 @@ test-post-grpc:
 	  -d '{"user": {"username":"new user", "email": "new email", "first_name": "new", "last_name": "user"}}' \
 	  localhost:9090 user.v1.UserService/CreateUser
 
+.PHONY: test-update-grpc
+test-update-grpc:
+	grpcurl -cacert certs/ca.crt \
+	  -d '{"user_id": 4, "username":"updated user", "email": "updated email", "first_name": "updated", "last_name": "user"}' \
+	  localhost:9090 user.v1.UserService/UpdateUser
+
+.PHONY: test-delete-grpc
+test-delete-grpc:
+	grpcurl -cacert certs/ca.crt \
+	  -d '{"user_id": 4}' \
+	  localhost:9090 user.v1.UserService/DeleteUser
+
 .PHONY: test-get-rest
 test-get-rest:
 	curl -H "Content-Type: application/json" \
@@ -94,4 +106,17 @@ test-post-rest:
 	  --cacert certs/ca.crt \
 	  -d '{"user": {"username":"new user", "email": "new email", "first_name": "new", "last_name": "user"}}' \
           https://localhost:8080/api/v1/users
+
+.PHONY: test-update-rest
+test-update-rest:
+	curl -X PUT -H "Content-Type: application/json" \
+	  --cacert certs/ca.crt \
+	  -d '{"user_id": 5, "username":"updated user", "email": "updated email", "first_name": "updated", "last_name": "user"}' \
+          https://localhost:8080/api/v1/users
+
+.PHONY: test-delete-rest
+test-delete-rest:
+	curl -X DELETE -H "Content-Type: application/json" \
+	  --cacert certs/ca.crt \
+          https://localhost:8080/api/v1/users/5
 
