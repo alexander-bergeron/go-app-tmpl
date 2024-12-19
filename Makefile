@@ -76,6 +76,12 @@ test-post-grpc:
 	  -d '{"user": {"username":"new user", "email": "new email", "first_name": "new", "last_name": "user"}}' \
 	  localhost:9090 user.v1.UserService/CreateUser
 
+.PHONY: test-post-grpc-bad
+test-post-grpc-bad:
+	grpcurl -cacert certs/ca.crt \
+	  -d '{"user": {"username":"new bad user", "last_name": "user"}}' \
+	  localhost:9090 user.v1.UserService/CreateUser
+
 .PHONY: test-update-grpc
 test-update-grpc:
 	grpcurl -cacert certs/ca.crt \
