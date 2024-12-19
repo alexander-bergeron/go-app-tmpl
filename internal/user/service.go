@@ -46,6 +46,8 @@ func (s Service) GetUsers(ctx context.Context, _ *emptypb.Empty) (*userpb.GetUse
 }
 
 func (s Service) CreateUser(ctx context.Context, in *userpb.CreateUserRequest) (*userpb.User, error) {
+	// TODO: Validate user inputs
+
 	newUser := repository.CreateUserParams{
 		Username:  in.User.Username,
 		Email:     in.User.Email,
@@ -100,6 +102,9 @@ func (s Service) StreamUsers(_ *emptypb.Empty, stream userpb.UserService_StreamU
 }
 
 func (s Service) UpdateUser(ctx context.Context, in *userpb.UpdateUserRequest) (*userpb.User, error) {
+	// TODO: Validate user inputs
+	// TODO: Determine what missing values in body result in (default or dont change)
+
 	newUser := repository.UpdateUserParams{
 		UserID:    in.UserId,
 		Username:  in.Username,

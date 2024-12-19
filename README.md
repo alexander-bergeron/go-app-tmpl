@@ -1,6 +1,20 @@
 # go-app-tmpl
 A template for generic golang applications.
 
+## Nix Setup
+
+Using Nix you can create a develop environment with all the tooling required to build this application.
+
+This flake was initialized using a template.
+
+```bash
+nix flake init --template "github:DeterminateSystems/zero-to-nix#go-dev"
+```
+
+I expanded this to include the additional packages required to build.
+
+You can enter the dev shell with the command `nix develop`.
+
 ## Tooling
 
 This section will cover all the moving parts of this demo. Each closes one gap for the fully declarative extensible build.
