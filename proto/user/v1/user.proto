@@ -47,7 +47,15 @@ service UserService {
       body: "*"
     };
   }
- 
+  
+  // Update user
+  rpc PatchUser (UpdateUserRequest) returns (User) {
+    option (google.api.http) = {
+      patch: "/api/v1/users"
+      body: "*"
+    };
+  }
+
 }
 
 // Implements a user object.
